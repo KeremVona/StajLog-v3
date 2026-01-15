@@ -3,7 +3,10 @@ const prisma = new PrismaClient();
 
 export const getUser = async (email: string) => {
   const user = await prisma.user.findUnique({ where: { email: email } });
-  return user;
+  if (user) {
+    return user;
+  }
+  return 0;
 };
 
 export const makeUser = async (
