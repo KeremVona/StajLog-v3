@@ -21,4 +21,5 @@ export const makeUser = async (
       password: password,
     },
   });
+  return user;
 };

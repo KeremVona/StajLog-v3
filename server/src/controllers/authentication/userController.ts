@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
 import { getUser, makeUser } from "../../services/authentication/userService";
+import jwtGenerator from "src/utils/jwtGenerator";
 
 interface RegisterRequestBody {
   username: string;
@@ -25,6 +26,10 @@ export const registerHandler = async (
     const bcryptPassword = await bcrypt.hash(password, salt);
 
     let newUser = await makeUser(username, email, bcryptPassword);
+
+    const jwtToken = jwtGenerator(newUser.id, newUser.username);
+
+    return res.json({ jwtToken });
   } catch (err) {
     console.error("Failed to register user");
     if (err instanceof Error) {
