@@ -1,4 +1,4 @@
-import express, { type Express, type Request, type Response } from "express";
+import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
 import { getUser, makeUser } from "../../services/authentication/userService";
 
