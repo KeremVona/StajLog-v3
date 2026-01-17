@@ -9,6 +9,11 @@ interface RegisterRequestBody {
   password: string;
 }
 
+interface LoginRequestBody {
+  email: string;
+  password: string;
+}
+
 export const registerHandler = async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response,
@@ -37,3 +42,8 @@ export const registerHandler = async (
     }
   }
 };
+
+export const loginHandler = async (
+  req: Request<{}, {}, LoginRequestBody>,
+  res: Response,
+) => {};
