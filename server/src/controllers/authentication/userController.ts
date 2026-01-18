@@ -46,4 +46,13 @@ export const registerHandler = async (
 export const loginHandler = async (
   req: Request<{}, {}, LoginRequestBody>,
   res: Response,
-) => {};
+) => {
+  const { email, password } = req.body;
+  try {
+  } catch (err) {
+    console.error("Failed to login");
+    if (err instanceof Error) {
+      return res.status(500).send("Server error");
+    }
+  }
+};
