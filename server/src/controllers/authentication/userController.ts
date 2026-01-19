@@ -49,6 +49,7 @@ export const loginHandler = async (
 ) => {
   const { email, password } = req.body;
   try {
+    const user = await getUser(email);
   } catch (err) {
     console.error("Failed to login");
     if (err instanceof Error) {
