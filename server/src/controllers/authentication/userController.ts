@@ -1,6 +1,10 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
-import { getUser, makeUser } from "../../services/authentication/userService";
+import {
+  getUser,
+  getUserById,
+  makeUser,
+} from "../../services/authentication/userService";
 import jwtGenerator from "src/utils/jwtGenerator";
 
 interface RegisterRequestBody {
@@ -12,6 +16,10 @@ interface RegisterRequestBody {
 interface LoginRequestBody {
   email: string;
   password: string;
+}
+
+interface GetIdRequestBody {
+  id: number;
 }
 
 export const registerHandler = async (
@@ -36,7 +44,7 @@ export const registerHandler = async (
 
     return res.json({ jwtToken });
   } catch (err) {
-    console.error("Failed to register user");
+    console.error("Server error - registerHandler");
     if (err instanceof Error) {
       return res.status(500).send("Server error");
     }
@@ -65,7 +73,7 @@ export const loginHandler = async (
 
     return res.json({ jwtToken });
   } catch (err) {
-    console.error("Failed to login");
+    console.error("Server error - loginHandler");
     if (err instanceof Error) {
       return res.status(500).send("Server error");
     }
@@ -76,9 +84,25 @@ export const verifyHandler = async (res: Response) => {
   try {
     return res.json(true);
   } catch (err) {
-    console.error("Server error");
+    console.error("Server error - verifyHandler");
     if (err instanceof Error) {
       return res.status(500).send("Server error");
     }
+  }
+};
+
+export const getUserIdHandler = async (
+  req: Request<{}, {}, GetIdRequestBody>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.body;
+
+    const user = await getUserById(id);
+
+    return res.json(user);
+  } catch (err) {
+    console.error("Server error - getUserIdHandler");
+    return res.status(500).send("Server error");
   }
 };
