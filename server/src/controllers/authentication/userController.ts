@@ -71,3 +71,14 @@ export const loginHandler = async (
     }
   }
 };
+
+export const verifyHandler = async (res: Response) => {
+  try {
+    return res.json(true);
+  } catch (err) {
+    console.error("Server error");
+    if (err instanceof Error) {
+      return res.status(500).send("Server error");
+    }
+  }
+};
