@@ -50,6 +50,20 @@ export const loginHandler = async (
   const { email, password } = req.body;
   try {
     const user = await getUser(email);
+
+    if (user === 0) {
+      return res.status(401).json("Invalid email");
+    }
+
+    const validPassword = bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      return res.status(401).json("Invalid pasword");
+    }
+
+    const jwtToken = jwtGenerator(user.id, user.username);
+
+    return res.json({ jwtToken });
   } catch (err) {
     console.error("Failed to login");
     if (err instanceof Error) {
