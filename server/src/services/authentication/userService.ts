@@ -16,6 +16,7 @@ export const getUserById = async (id: number) => {
   }
   return 0;
 };
+
 export const makeUser = async (
   username: string,
   email: string,

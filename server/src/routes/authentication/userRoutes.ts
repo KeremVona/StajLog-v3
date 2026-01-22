@@ -5,6 +5,7 @@ import {
   registerHandler,
   loginHandler,
   verifyHandler,
+  getUserIdHandler,
 } from "src/controllers/authentication/userController";
 
 const router = express.Router();
@@ -12,3 +13,4 @@ const router = express.Router();
 router.post("/register", validInfo, registerHandler);
 router.post("/login", validInfo, loginHandler);
 router.post("/verify", authorize, verifyHandler);
+router.post("/user-id", authorize, getUserIdHandler);
