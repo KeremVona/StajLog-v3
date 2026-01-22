@@ -14,3 +14,5 @@ router.post("/register", validInfo, registerHandler);
 router.post("/login", validInfo, loginHandler);
 router.post("/verify", authorize, verifyHandler);
 router.post("/user-id", authorize, getUserIdHandler);
+
+export default router;
