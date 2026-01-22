@@ -1,5 +1,58 @@
+import { useState, useEffect } from "react";
+import "./Register.css";
+
+const API_URL = "http://localhost:5000/api/authentication/register";
+
 const Register = () => {
-  return <div></div>;
+  return (
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h1>Login</h1>
+
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <span
+              className="toggle-password"
+              onClick={togglePasswordVisibility}
+              style={{ cursor: "pointer" }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" className="btn-login">
+          Sign In
+        </button>
+
+        <div className="form-footer">
+          <a href="#">Forgot Password?</a>
+        </div>
+      </form>
+      <div className="animation-bg"></div>
+    </div>
+  );
 };
 
 export default Register;
