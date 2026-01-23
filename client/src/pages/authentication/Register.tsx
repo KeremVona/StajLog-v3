@@ -4,18 +4,28 @@ import "./Register.css";
 const API_URL = "http://localhost:5000/api/authentication/register";
 
 const Register = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleChange = () => {};
+
+  const handleSubmit = async () => {};
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h1>Login</h1>
 
         <div className="form-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
             id="username"
-            name="username"
-            value={formData.username}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
