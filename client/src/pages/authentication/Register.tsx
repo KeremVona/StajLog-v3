@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Register.css";
 
-const API_URL = "http://localhost:5000/api/authentication/register";
-
 const Register = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
