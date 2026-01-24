@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useRegisterUserMutation } from "../../services/authentication/authentication";
 import "./Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
+
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -14,10 +20,37 @@ const Register = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {};
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/home");
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const response = await registerUser(formData);
+
+      const { jwtToken } = response.data;
+
+      localStorage.setItem("token", jwtToken);
+      // TODO:
+      // Add a message that displays that the user is going to be navigated
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
+  };
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login-form">
         <h1>Login</h1>
 
         <div className="form-group">
