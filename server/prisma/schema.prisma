@@ -13,9 +13,83 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  username String
-  email    String   @unique
-  password String
-  made_at  DateTime @default(now())
+  id           String  @id @default(uuid())
+  email        String  @unique
+  passwordHash String
+  fullName     String?
+  university   String?
+
+  madeAt    DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  internships Internship[]
+
+  // Placeholder for Part 2 (General Documents)
+  documents Document[]
+}
+
+model Internship {
+  id          String    @id @default(uuid())
+  title       String
+  companyName String
+  startDate   DateTime
+  endDate     DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  templateId String?
+  template   ReportTemplate? @relation(fields: [templateId], references: [id])
+
+  logs DailyLog[]
+
+  madeAt    DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyLog {
+  id String @id @default(uuid())
+
+  dayNumber Int
+  date      DateTime
+
+  originalContent String @db.Text
+
+  finalContent String? @db.Text
+
+  isAiImproved Boolean   @default(false)
+  status       LogStatus @default(DRAFT)
+
+  internshipId String
+  internship   Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+
+  madeAt    DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([internshipId, dayNumber])
+}
+
+model ReportTemplate {
+  id         String  @id @default(uuid())
+  name       String
+  university String?
+  fileUrl    String
+
+  internships Internship[]
+
+  madeAt DateTime @default(now())
+}
+
+model Document {
+  id     String @id @default(uuid())
+  title  String
+  type   String
+  data   Json
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum LogStatus {
+  DRAFT
+  COMPLETED
 }

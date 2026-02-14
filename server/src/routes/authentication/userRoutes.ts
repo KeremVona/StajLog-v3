@@ -1,12 +1,12 @@
 import express from "express";
-import validInfo from "src/middlewares/validInfo";
-import authorize from "src/middlewares/authorization";
 import {
   registerHandler,
   loginHandler,
   verifyHandler,
   getUserIdHandler,
-} from "src/controllers/authentication/userController";
+} from "../../controllers/authentication/userController";
+import validInfo from "../../middlewares/validInfo";
+import authorize from "../../middlewares/authorization";
 
 const router = express.Router();
 

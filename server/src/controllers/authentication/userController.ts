@@ -5,7 +5,7 @@ import {
   getUserById,
   makeUser,
 } from "../../services/authentication/userService";
-import jwtGenerator from "src/utils/jwtGenerator";
+import jwtGenerator from "../../utils/jwtGenerator";
 
 interface RegisterRequestBody {
   username: string;
@@ -30,8 +30,9 @@ export const registerHandler = async (
 
   try {
     const user = await getUser(email);
+    console.log("register request received", user);
 
-    if (user === 0) {
+    if (user != 0) {
       return res.status(401).send("User already exists");
     }
 
@@ -39,8 +40,10 @@ export const registerHandler = async (
     const bcryptPassword = await bcrypt.hash(password, salt);
 
     let newUser = await makeUser(username, email, bcryptPassword);
+    console.log("newUser ", newUser);
 
     const jwtToken = jwtGenerator(newUser.id, newUser.username);
+    jwtToken && console.log("token generated");
 
     return res.json({ jwtToken });
   } catch (err) {

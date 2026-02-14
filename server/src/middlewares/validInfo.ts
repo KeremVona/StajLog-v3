@@ -9,7 +9,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
 
   if (req.path === "/register") {
     console.log(!email.length);
-    if (![email, username, password].every(Boolean)) {
+    if (![email, password].every(Boolean)) {
       return res.json("Missing Credentials");
     } else if (!validEmail(email)) {
       return res.json("Invalid Email");

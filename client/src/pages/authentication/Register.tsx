@@ -30,9 +30,11 @@ const Register = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    console.log("sending to backend", formData);
 
     try {
       const response = await registerUser(formData);
+      console.log("response: ", response);
 
       const { jwtToken } = response.data;
 
@@ -50,7 +52,7 @@ const Register = () => {
   };
   return (
     <div className="login-container">
-      <form className="login-form">
+      <form onSubmit={handleSubmit} className="login-form">
         <h1>Login</h1>
 
         <div className="form-group">
