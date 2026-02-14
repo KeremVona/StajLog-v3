@@ -1,11 +1,14 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
 import {
+  deleteUser,
   getUser,
   getUserById,
   makeUser,
+  updateUser,
 } from "../../services/authentication/userService";
 import jwtGenerator from "../../utils/jwtGenerator";
+import { Prisma } from "@prisma/client";
 
 interface RegisterRequestBody {
   username: string;
@@ -19,7 +22,11 @@ interface LoginRequestBody {
 }
 
 interface GetIdRequestBody {
-  id: number;
+  id: string;
+}
+
+interface UserIdParams {
+  userId: string;
 }
 
 export const registerHandler = async (
@@ -42,7 +49,11 @@ export const registerHandler = async (
     let newUser = await makeUser(username, email, bcryptPassword);
     console.log("newUser ", newUser);
 
-    const jwtToken = jwtGenerator(newUser.id, newUser.username);
+    if (!newUser.fullName) {
+      return res.status(401).json("Invalid fullName");
+    }
+
+    const jwtToken = jwtGenerator(newUser.id, newUser.fullName);
     jwtToken && console.log("token generated");
 
     return res.json({ jwtToken });
@@ -66,13 +77,16 @@ export const loginHandler = async (
       return res.status(401).json("Invalid email");
     }
 
-    const validPassword = bcrypt.compare(password, user.password);
+    const validPassword = bcrypt.compare(password, user.passwordHash);
 
     if (!validPassword) {
       return res.status(401).json("Invalid pasword");
     }
+    if (!user.fullName) {
+      return res.status(401).json("Invalid fullName");
+    }
 
-    const jwtToken = jwtGenerator(user.id, user.username);
+    const jwtToken = jwtGenerator(user.id, user.fullName);
 
     return res.json({ jwtToken });
   } catch (err) {
@@ -107,5 +121,64 @@ export const getUserIdHandler = async (
   } catch (err) {
     console.error("Server error - getUserIdHandler");
     return res.status(500).send("Server error");
+  }
+};
+
+export const updateUserController = async (
+  req: Request<UserIdParams>,
+  res: Response,
+) => {
+  try {
+    const userId = req.params.userId;
+    const updateData = req.body;
+
+    delete updateData.id;
+    delete updateData.passwordHash;
+
+    const updatedUser = await updateUser(userId, updateData);
+
+    const { passwordHash, ...safeUser } = updatedUser;
+
+    return res.status(200).json({
+      message: "User updated successfully",
+      user: safeUser,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "User not found." });
+      }
+    }
+
+    console.error("Error updating user:", error);
+    return res
+      .status(500)
+      .json({ error: "An internal server error occurred." });
+  }
+};
+
+export const deleteUserController = async (
+  req: Request<UserIdParams>,
+  res: Response,
+) => {
+  try {
+    const userId = req.params.userId;
+
+    await deleteUser(userId);
+
+    return res.status(200).json({
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "User not found." });
+      }
+    }
+
+    console.error("Error deleting user:", error);
+    return res
+      .status(500)
+      .json({ error: "An internal server error occurred." });
   }
 };
