@@ -19,13 +19,16 @@ const Login = () => {
   );
 
   useEffect(() => {
+    if (isError) {
+      alert(message);
+    }
     if (isSuccess || user) {
       navigate("/home");
     }
     return () => {
       dispatch(reset());
     };
-  }, [user, isSuccess, navigate, dispatch]);
+  }, [user, isSuccess, navigate, dispatch, isError, message]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({
@@ -44,6 +47,10 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="login-container">
