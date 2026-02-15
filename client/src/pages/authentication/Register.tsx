@@ -1,15 +1,34 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useRegisterUserMutation } from "../../services/authentication/authentication";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { register, reset } from "../../features/auth/authSlice";
 import "./Register.css";
 
 const Register = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
 
-  const [registerUser, { isLoading }] = useRegisterUserMutation();
-
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useAppSelector(
+    (state) => state.auth,
+  );
+
+  useEffect(() => {
+    if (isError) {
+      alert(message);
+    }
+    if (isSuccess || user) {
+      navigate("/home");
+    }
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -30,30 +49,34 @@ const Register = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("sending to backend", formData);
-
-    try {
-      const response = await registerUser(formData);
-      console.log("response: ", response);
-
-      const { jwtToken } = response.data;
-
-      localStorage.setItem("token", jwtToken);
-      // TODO:
-      // Add a message that displays that the user is going to be navigated
-      setTimeout(() => {
-        navigate("/home");
-      }, 1000);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.message);
-      }
-    }
+    const name = formData.name;
+    const email = formData.email;
+    const password = formData.password;
+    dispatch(register({ name, email, password }));
+    setTimeout(() => {
+      navigate("/home");
+    }, 1000);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
         <h1>Login</h1>
+
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="username"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
         <div className="form-group">
           <label htmlFor="email">Email</label>

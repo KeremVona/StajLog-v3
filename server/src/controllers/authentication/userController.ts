@@ -11,7 +11,7 @@ import jwtGenerator from "../../utils/jwtGenerator";
 import { Prisma } from "@prisma/client";
 
 interface RegisterRequestBody {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -33,11 +33,10 @@ export const registerHandler = async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response,
 ) => {
-  const { username, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     const user = await getUser(email);
-    console.log("register request received", user);
 
     if (user != 0) {
       return res.status(401).send("User already exists");
@@ -46,15 +45,13 @@ export const registerHandler = async (
     const salt = await bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hash(password, salt);
 
-    let newUser = await makeUser(username, email, bcryptPassword);
-    console.log("newUser ", newUser);
+    let newUser = await makeUser(name, email, bcryptPassword);
 
     if (!newUser.fullName) {
       return res.status(401).json("Invalid fullName");
     }
 
     const jwtToken = jwtGenerator(newUser.id, newUser.fullName);
-    jwtToken && console.log("token generated");
 
     return res.json({ jwtToken });
   } catch (err) {
