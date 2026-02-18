@@ -4,6 +4,7 @@ import {
   getAllLogs,
   getLogById,
   makeLogService,
+  updateLogService,
 } from "../../services/log/logService";
 import { LogData } from "src/b/b1";
 
@@ -63,7 +64,42 @@ export const makeLog = async (req: Request<{}, {}, LogData>, res: Response) => {
     console.error("[makeLog Controller Error]:", error);
     return res.status(500).json({
       success: false,
-      error: "An unexpected error occurred while making the log.",
+      error: "An error occurred while making the log.",
+    });
+  }
+};
+
+export const updateLog = async (
+  req: Request<GetLogRequestParams, LogData>,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const { originalContent, finalContent } = req.body;
+
+  try {
+    if (!originalContent || !finalContent) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "Missing required fields. Please provide originalContent and finalContent.",
+      });
+    }
+
+    const updatedLog = await updateLogService(id, req.body);
+
+    return res.status(200).send(updatedLog);
+  } catch (error: any) {
+    if (error.message && error.message.includes("already exists")) {
+      return res.status(409).json({
+        success: false,
+        error: error.message,
+      });
+    }
+
+    console.error("[updateLog Controller Error]:", error);
+    return res.status(500).json({
+      success: false,
+      error: "An error occurred while updating the log.",
     });
   }
 };

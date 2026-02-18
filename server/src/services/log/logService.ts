@@ -1,5 +1,7 @@
 import { LogData } from "src/b/b1";
 import { prisma } from "../../prisma";
+import { Prisma } from "@prisma/client";
+import { handlePrismaError } from "src/utils/errorHandler";
 
 export const getAllLogs = async () => {
   const logs = await prisma.dailyLog.findMany();
@@ -33,14 +35,26 @@ export const makeLogService = async (logData: LogData) => {
     });
 
     return { success: true, data: newLog };
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      throw new Error(
-        `A log for day ${logData.dayNumber} already exists for this internship.`,
-      );
-    }
+  } catch (error: unknown) {
+    handlePrismaError(error, "Failed to make the daily log. Please try again.");
+  }
+};
 
-    console.error("Error making daily log:", error);
-    throw new Error("Failed to make the daily log. Please try again.");
+export const updateLogService = async (id: string, logData: LogData) => {
+  try {
+    const updatedLog = await prisma.dailyLog.update({
+      where: { id: id },
+      data: {
+        originalContent: logData.originalContent,
+        finalContent: logData.finalContent,
+      },
+    });
+
+    return { succcess: true, data: updatedLog };
+  } catch (error: unknown) {
+    handlePrismaError(
+      error,
+      "Failed to update the daily log. Please try again.",
+    );
   }
 };
