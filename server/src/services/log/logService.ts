@@ -58,3 +58,16 @@ export const updateLogService = async (id: string, logData: LogData) => {
     );
   }
 };
+
+export const deleteLogService = async (id: string) => {
+  try {
+    await prisma.dailyLog.delete({ where: { id: id } });
+
+    return { success: true };
+  } catch (error: unknown) {
+    handlePrismaError(
+      error,
+      "Failed to delete the daily log. Please try again.",
+    );
+  }
+};

@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { type ParamsDictionary } from "express-serve-static-core";
 import {
+  deleteLogService,
   getAllLogs,
   getLogById,
   makeLogService,
@@ -100,6 +101,24 @@ export const updateLog = async (
     return res.status(500).json({
       success: false,
       error: "An error occurred while updating the log.",
+    });
+  }
+};
+
+export const deleteLog = async (
+  req: Request<GetLogRequestParams>,
+  res: Response,
+) => {
+  const { id } = req.params;
+  try {
+    await deleteLogService(id);
+
+    return res.status(200);
+  } catch (error) {
+    console.error("[deleteLog Controller Error]:", error);
+    return res.status(500).json({
+      success: false,
+      error: "An error occurred while deleting the log.",
     });
   }
 };
