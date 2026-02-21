@@ -1,9 +1,5 @@
 import { Internship } from "@prisma/client";
-import {
-  InternshipData,
-  MakeInternshipDTO,
-  UpdateInternshipDTO,
-} from "../../b/b2";
+import { MakeInternshipDTO, UpdateInternshipDTO } from "../../b/b2";
 import { prisma } from "../../prisma";
 import { handlePrismaError } from "../../utils/errorHandler";
 
@@ -25,7 +21,7 @@ export const getInternshipById = async (id: string): Promise<Internship> => {
   return internship;
 };
 
-export async function makeInternship(
+export async function makeInternshipService(
   internshipData: MakeInternshipDTO,
 ): Promise<Internship> {
   try {
@@ -54,7 +50,7 @@ export async function makeInternship(
   }
 }
 
-export const updateInternship = async (
+export const updateInternshipService = async (
   id: string,
   updateData: UpdateInternshipDTO,
 ): Promise<Internship> => {
@@ -88,7 +84,7 @@ export const updateInternship = async (
   }
 };
 
-export const deleteLogService = async (id: string) => {
+export const deleteInternshipService = async (id: string) => {
   try {
     await prisma.internship.delete({ where: { id: id } });
 
@@ -96,7 +92,7 @@ export const deleteLogService = async (id: string) => {
   } catch (error: unknown) {
     handlePrismaError(
       error,
-      "Failed to delete the daily log. Please try again.",
+      "Failed to delete the internship log. Please try again.",
     );
   }
 };
