@@ -1,7 +1,6 @@
-import { LogData } from "src/b/b1";
+import { LogData } from "../../b/b1";
 import { prisma } from "../../prisma";
-import { Prisma } from "@prisma/client";
-import { handlePrismaError } from "src/utils/errorHandler";
+import { handlePrismaError } from "../../utils/errorHandler";
 
 export const getAllLogs = async () => {
   const logs = await prisma.dailyLog.findMany();

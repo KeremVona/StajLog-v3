@@ -7,7 +7,7 @@ import {
   makeLogService,
   updateLogService,
 } from "../../services/log/logService";
-import { LogData } from "src/b/b1";
+import { LogData } from "../../b/b1";
 
 interface GetLogRequestParams extends ParamsDictionary {
   id: string;

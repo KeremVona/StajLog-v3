@@ -5,7 +5,7 @@ import {
   makeLog,
   updateLog,
   deleteLog,
-} from "src/controllers/log/logController";
+} from "../../controllers/log/logController";
 import authorize from "../../middlewares/authorization";
 
 const router = Router();
