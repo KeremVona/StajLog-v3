@@ -113,7 +113,7 @@ export const deleteLog = async (
   try {
     await deleteLogService(id);
 
-    return res.status(200);
+    return res.status(200).json({ id, success: true });
   } catch (error) {
     console.error("[deleteLog Controller Error]:", error);
     return res.status(500).json({

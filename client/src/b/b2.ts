@@ -1,4 +1,5 @@
 export interface LogData {
+  id: string;
   dayNumber: number;
   date: Date | string;
   originalContent: string;
@@ -6,4 +7,13 @@ export interface LogData {
 
   finalContent?: string;
   isAiImproved?: boolean;
+}
+
+export interface LogParams {
+  id?: string;
+}
+
+export interface LogParamsUpdate {
+  id?: string;
+  data: LogData;
 }
