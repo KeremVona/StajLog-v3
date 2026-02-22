@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import logService from "./logService";
-import type { LogData } from "../../b/b2";
+import internshipService from "./internsipService";
+import { type InternshipData } from "../../b/b3";
 
 export interface LogState {
-  logs: LogData[];
-  currentLog: LogData | null;
+  internships: InternshipData[];
+  currentInternship: InternshipData | null;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -12,19 +12,19 @@ export interface LogState {
 }
 
 export const initialState: LogState = {
-  logs: [],
-  currentLog: null,
+  internships: [],
+  currentInternship: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-export const getAllLogs = createAsyncThunk<LogData[]>(
-  "logs/getAll",
+export const getAllInternships = createAsyncThunk<InternshipData[]>(
+  "internships/getAll",
   async (_, thunkAPI) => {
     try {
-      return await logService.getAllLogs();
+      return await internshipService.getAllInternships();
     } catch (error: any) {
       const message =
         error.response?.data?.message || error.message || error.toString();
@@ -33,11 +33,11 @@ export const getAllLogs = createAsyncThunk<LogData[]>(
   },
 );
 
-export const getLogById = createAsyncThunk<LogData, string>(
-  "logs/getById",
+export const getInternshipById = createAsyncThunk<InternshipData, string>(
+  "internships/getById",
   async (id, thunkAPI) => {
     try {
-      return await logService.getLogById(id);
+      return await internshipService.getInternshipById(id);
     } catch (error: any) {
       const message =
         error.response?.data?.message || error.message || error.toString();
@@ -46,11 +46,11 @@ export const getLogById = createAsyncThunk<LogData, string>(
   },
 );
 
-export const makeLog = createAsyncThunk<LogData, LogData>(
-  "logs/makeLog",
-  async (newLog, thunkAPI) => {
+export const makeInternship = createAsyncThunk<InternshipData, InternshipData>(
+  "internships/makeLog",
+  async (newInternship, thunkAPI) => {
     try {
-      return await logService.makeLog(newLog);
+      return await internshipService.makeInternship(newInternship);
     } catch (error: any) {
       const message =
         error.response?.data?.message || error.message || error.toString();
@@ -59,12 +59,12 @@ export const makeLog = createAsyncThunk<LogData, LogData>(
   },
 );
 
-export const updateLog = createAsyncThunk<
-  LogData,
-  { id: string; logData: LogData }
->("logs/update", async (params, thunkAPI) => {
+export const updateInternship = createAsyncThunk<
+  InternshipData,
+  { id: string; internshipData: InternshipData }
+>("internships/update", async (params, thunkAPI) => {
   try {
-    return await logService.updateLog(params);
+    return await internshipService.updateInternship(params);
   } catch (error: any) {
     const message =
       error.response?.data?.message || error.message || error.toString();
@@ -72,11 +72,11 @@ export const updateLog = createAsyncThunk<
   }
 });
 
-export const deleteLog = createAsyncThunk<string, string>(
-  "logs/delete",
+export const deleteInternship = createAsyncThunk<string, string>(
+  "internships/delete",
   async (id, thunkAPI) => {
     try {
-      return await logService.deleteLog(id);
+      return await internshipService.deleteInternship(id);
     } catch (error: any) {
       const message =
         error.response?.data?.message || error.message || error.toString();
@@ -85,8 +85,8 @@ export const deleteLog = createAsyncThunk<string, string>(
   },
 );
 
-export const logSlice = createSlice({
-  name: "logs",
+export const internshipSlice = createSlice({
+  name: "internships",
   initialState,
   reducers: {
     reset: (state) => {
@@ -99,89 +99,89 @@ export const logSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // ----------------------
-      // Get All Logs
+      // Get All Internships
       // ----------------------
-      .addCase(getAllLogs.pending, (state) => {
+      .addCase(getAllInternships.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.isSuccess = false;
       })
-      .addCase(getAllLogs.fulfilled, (state, action) => {
+      .addCase(getAllInternships.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.logs = action.payload;
+        state.internships = action.payload;
       })
-      .addCase(getAllLogs.rejected, (state, action) => {
+      .addCase(getAllInternships.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       })
       // ----------------------
-      // Get Log By Id
+      // Get internship By Id
       // ----------------------
-      .addCase(getLogById.pending, (state) => {
+      .addCase(getInternshipById.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.isSuccess = false;
       })
-      .addCase(getLogById.fulfilled, (state, action) => {
+      .addCase(getInternshipById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.currentLog = action.payload;
+        state.currentInternship = action.payload;
       })
-      .addCase(getLogById.rejected, (state, action) => {
+      .addCase(getInternshipById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       })
       // ----------------------
-      // Make Log
+      // Make Internship
       // ----------------------
-      .addCase(makeLog.pending, (state) => {
+      .addCase(makeInternship.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(makeLog.fulfilled, (state, action) => {
+      .addCase(makeInternship.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
 
-        state.logs.unshift(action.payload);
+        state.internships.unshift(action.payload);
       })
-      .addCase(makeLog.rejected, (state, action) => {
+      .addCase(makeInternship.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       })
       // ----------------------
-      // Update Log
+      // Update Internship
       // ----------------------
-      .addCase(updateLog.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateLog.fulfilled, (state, action) => {
+
+      .addCase(updateInternship.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
 
-        state.logs = state.logs.map((log) =>
-          log.id === action.payload.id ? action.payload : log,
+        state.internships = state.internships.map((internship) =>
+          internship.id === action.payload.id ? action.payload : internship,
         );
       })
-      .addCase(updateLog.rejected, (state, action) => {
+      .addCase(updateInternship.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
       })
       // ----------------------
-      // Delete Log
+      // Delete Internship
       // ----------------------
-      .addCase(deleteLog.fulfilled, (state, action) => {
-        state.logs = state.logs.filter((log) => log.id !== action.payload);
+      .addCase(deleteInternship.fulfilled, (state, action) => {
+        state.internships = state.internships.filter(
+          (internship) => internship.id !== action.payload,
+        );
         state.isLoading = false;
       })
-      .addCase(deleteLog.pending, (state) => {
+      .addCase(deleteInternship.pending, (state) => {
         state.isLoading = true;
       });
   },
 });
 
-export const { reset } = logSlice.actions;
-export default logSlice.reducer;
+export const { reset } = internshipSlice.actions;
+export default internshipSlice.reducer;
