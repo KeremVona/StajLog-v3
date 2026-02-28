@@ -23,7 +23,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
     if (!secret) {
       throw new Error("Secret not in .env");
     }
-    const verify = jwt.verify(token, secret) as JwtPayload;
+    const verify = jwt.verify(token, secret) as Express.UserPayload;
 
     req.user = verify.user;
     next();

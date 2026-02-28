@@ -21,7 +21,6 @@ export interface MakeInternshipDTO {
   companyName: string;
   startDate: Date | string;
   endDate?: Date | string | null;
-  userId: string;
   templateId?: string | null;
 }
 

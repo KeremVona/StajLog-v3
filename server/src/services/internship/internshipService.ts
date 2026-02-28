@@ -23,6 +23,7 @@ export const getInternshipById = async (id: string): Promise<Internship> => {
 
 export async function makeInternshipService(
   internshipData: MakeInternshipDTO,
+  userId: string,
 ): Promise<Internship> {
   try {
     const newInternship = await prisma.internship.create({
@@ -39,7 +40,7 @@ export async function makeInternshipService(
           templateId: internshipData.templateId,
         }),
 
-        userId: internshipData.userId,
+        userId: userId,
       },
     });
 

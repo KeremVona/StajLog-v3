@@ -44,11 +44,13 @@ export const makeInternship = async (
   res: Response,
 ) => {
   const { title, companyName, startDate, endDate } = req.body;
+
+  const userId = req.user!.id;
   try {
     if (!title || !companyName || !startDate || !endDate) {
       res.status(400).send("Missing fields");
     }
-    const response = await makeInternshipService(req.body);
+    const response = await makeInternshipService(req.body, userId);
 
     return res.send(response);
   } catch (error) {
@@ -64,6 +66,9 @@ export const updateInternship = async (
   const { id } = req.params;
   const { title, companyName, startDate, endDate } = req.body;
   try {
+    if (!title || !companyName || !startDate || !endDate) {
+      res.status(400).send("Missing fields");
+    }
     const updatedInternship = await updateInternshipService(id, req.body);
 
     return res.status(200).send(updatedInternship);
