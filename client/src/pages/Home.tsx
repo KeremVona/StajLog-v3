@@ -1,5 +1,12 @@
+import { Link, useNavigate } from "react-router";
 import MenuSection from "../components/home-dashboard/MenuSection";
 import WelcomeCard from "../components/home-dashboard/WelcomeCard";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import {
+  getAllInternships,
+  reset,
+} from "../features/internship/internshipSlice";
 
 interface MenuItem {
   title: string;
@@ -29,6 +36,28 @@ const Home = () => {
     { title: "Settings", icon: "settings", path: "/settings" },
     { title: "Log out", icon: "power_settings_new", path: "/logout" },
   ];
+
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const { internships, isLoading, isError, isSuccess, message } =
+    useAppSelector((state) => state.internships);
+
+  useEffect(() => {
+    if (isError) {
+      alert(message);
+    }
+    dispatch(reset());
+  }, [isError, isSuccess, message, dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllInternships());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
 
   return (
     <div className="bg-orange-100 min-h-screen font-sans">
@@ -88,13 +117,14 @@ const Home = () => {
 
           {/* Bottom Grid */}
           <div className="flex flex-row h-64 mt-6 gap-6">
-            {["a", "b", "c"].map((item) => (
-              <div
-                key={item}
+            {internships.map((item) => (
+              <Link
+                key={item.id}
+                to={`/internship/${item.id}`}
                 className="bg-white rounded-xl shadow-lg px-6 py-4 w-4/12 flex items-center justify-center text-gray-400"
               >
-                {item.toUpperCase()} Content
-              </div>
+                {item.title}
+              </Link>
             ))}
           </div>
         </main>

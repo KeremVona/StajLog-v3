@@ -1,5 +1,9 @@
 import API from "../../api/api";
-import type { InternshipData, MakeInternshipDTO } from "../../b/b3";
+import type {
+  InternshipData,
+  MakeInternshipDTO,
+  UpdateInternshipDTO,
+} from "../../b/b3";
 
 const getAllInternships = async (): Promise<InternshipData[]> => {
   const response = await API.get("/internship/");
@@ -23,7 +27,7 @@ const makeInternship = async (
 
 const updateInternship = async (params: {
   id: string;
-  internshipData: InternshipData;
+  internshipData: UpdateInternshipDTO;
 }): Promise<InternshipData> => {
   const { id, internshipData } = params;
   const response = await API.put(`/internship/${id}`, internshipData);

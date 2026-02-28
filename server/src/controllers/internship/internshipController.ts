@@ -50,9 +50,7 @@ export const makeInternship = async (
     if (!title || !companyName || !startDate || !endDate) {
       res.status(400).send("Missing fields");
     }
-    console.log("[MakeInternship] Received data ", req.body);
     const response = await makeInternshipService(req.body, userId);
-    console.log("Response: ", response);
 
     return res.send(response);
   } catch (error) {

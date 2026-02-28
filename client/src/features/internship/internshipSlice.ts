@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import internshipService from "./internsipService";
-import { type InternshipData, type MakeInternshipDTO } from "../../b/b3";
+import {
+  type InternshipData,
+  type MakeInternshipDTO,
+  type UpdateInternshipDTO,
+} from "../../b/b3";
 
 export interface InternshipState {
   internships: InternshipData[];
@@ -61,7 +65,7 @@ export const makeInternship = createAsyncThunk<
 
 export const updateInternship = createAsyncThunk<
   InternshipData,
-  { id: string; internshipData: InternshipData }
+  { id: string; internshipData: UpdateInternshipDTO }
 >("internships/update", async (params, thunkAPI) => {
   try {
     return await internshipService.updateInternship(params);
