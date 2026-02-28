@@ -1,5 +1,5 @@
 import API from "../../api/api";
-import type { InternshipData } from "../../b/b3";
+import type { InternshipData, MakeInternshipDTO } from "../../b/b3";
 
 const getAllInternships = async (): Promise<InternshipData[]> => {
   const response = await API.get("/internship/");
@@ -14,7 +14,7 @@ const getInternshipById = async (id: string): Promise<InternshipData> => {
 };
 
 const makeInternship = async (
-  internshipData: InternshipData,
+  internshipData: MakeInternshipDTO,
 ): Promise<InternshipData> => {
   const response = await API.post("/internship/", internshipData);
 

@@ -1,27 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  makeInternship,
+  reset,
+} from "../../features/internship/internshipSlice";
+import { useNavigate } from "react-router";
 
 export interface MakeInternshipDTO {
   title: string;
   companyName: string;
   startDate: Date | string;
   endDate?: Date | string | null;
-  userId: string;
   templateId?: string | null;
 }
 
 export default function AddInternship() {
-  const currentUserId = "user-123";
-
   const [formData, setFormData] = useState<MakeInternshipDTO>({
     title: "",
     companyName: "",
     startDate: "",
     endDate: "",
-    userId: currentUserId,
     templateId: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const { currentInternship, isLoading, isError, isSuccess, message } =
+    useAppSelector((state) => state.internships);
+
+  useEffect(() => {
+    if (isError) {
+      alert(message);
+    }
+    if (isSuccess || currentInternship) {
+      navigate("/home");
+    }
+    dispatch(reset());
+  }, [currentInternship, isError, isSuccess, message, navigate, dispatch]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -46,8 +65,7 @@ export default function AddInternship() {
 
       console.log("Submitting DTO:", payload);
 
-      // TODO: Replace with your actual API call
-      // await fetch('/api/internships', { method: 'POST', body: JSON.stringify(payload) });
+      dispatch(makeInternship(payload));
 
       alert("Internship added successfully!");
 
@@ -56,15 +74,22 @@ export default function AddInternship() {
         companyName: "",
         startDate: "",
         endDate: "",
-        userId: currentUserId,
         templateId: "",
       });
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
     } catch (error) {
       console.error("Error adding internship:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border border-gray-100">

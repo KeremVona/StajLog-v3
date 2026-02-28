@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import internshipService from "./internsipService";
-import { type InternshipData } from "../../b/b3";
+import { type InternshipData, type MakeInternshipDTO } from "../../b/b3";
 
-export interface LogState {
+export interface InternshipState {
   internships: InternshipData[];
   currentInternship: InternshipData | null;
   isError: boolean;
@@ -11,7 +11,7 @@ export interface LogState {
   message: string;
 }
 
-export const initialState: LogState = {
+export const initialState: InternshipState = {
   internships: [],
   currentInternship: null,
   isError: false,
@@ -46,18 +46,18 @@ export const getInternshipById = createAsyncThunk<InternshipData, string>(
   },
 );
 
-export const makeInternship = createAsyncThunk<InternshipData, InternshipData>(
-  "internships/makeLog",
-  async (newInternship, thunkAPI) => {
-    try {
-      return await internshipService.makeInternship(newInternship);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  },
-);
+export const makeInternship = createAsyncThunk<
+  InternshipData,
+  MakeInternshipDTO
+>("internships/makeLog", async (newInternship, thunkAPI) => {
+  try {
+    return await internshipService.makeInternship(newInternship);
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || error.message || error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const updateInternship = createAsyncThunk<
   InternshipData,
