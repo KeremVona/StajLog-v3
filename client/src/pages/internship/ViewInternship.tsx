@@ -2,6 +2,9 @@ import AddLogForm from "../../components/internship/AddLogForm";
 import LogCarousel from "../../components/internship/LogCarousel";
 import Navbar from "../../components/ui/Navbar";
 import Sidebar from "../../components/ui/Sidebar";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getAllLogs, reset } from "../../features/log/logSlice";
+import { useEffect } from "react";
 
 interface MenuItem {
   title: string;
@@ -19,7 +22,11 @@ export interface LogData {
   isAiImproved?: boolean;
 }
 
-const ViewInternship = () => {
+interface ViewInternshipProps {
+  internshipId: string;
+}
+
+const ViewInternship = ({ internshipId }: ViewInternshipProps) => {
   const topNavItems: MenuItem[] = [
     { title: "Home", icon: "dashboard", path: "/" },
     { title: "Add Internship", icon: "tune", path: "/menu-1" },
@@ -32,6 +39,23 @@ const ViewInternship = () => {
     { title: "Log out", icon: "power_settings_new", path: "/logout" },
   ];
 
+  const dispatch = useAppDispatch();
+
+  const { logs, isLoading, isError, isSuccess, message } = useAppSelector(
+    (state) => state.logs,
+  );
+
+  useEffect(() => {
+    if (isError) {
+      alert(message);
+    }
+    dispatch(reset());
+  }, [logs, isError, isSuccess, message, dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllLogs());
+  }, []);
+
   const mockLogs: LogData[] = [
     {
       id: "fhiuwegfhewg",
@@ -43,13 +67,17 @@ const ViewInternship = () => {
     },
     {
       id: "fhiuwegfhewg",
-      dayNumber: 1,
+      dayNumber: 2,
       date: "Oct 12, 2026",
       originalContent:
         "originalContentfehajkeeeee e e e eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       internshipId: "fbjnkdafhkja",
     },
   ];
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
   return (
     <div className="bg-orange-100 min-h-screen font-sans">
       <Navbar />
@@ -67,7 +95,7 @@ const ViewInternship = () => {
             throw new Error("Function not implemented.");
           }}
         />
-        <LogCarousel logs={mockLogs} />
+        <LogCarousel logs={logs} />
       </div>
     </div>
   );
