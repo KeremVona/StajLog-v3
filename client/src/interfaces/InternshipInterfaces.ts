@@ -1,5 +1,5 @@
-import { type LogData } from "./b2";
-import { type User } from "./b1";
+import type { User } from "./AuthInterfaces";
+import type { LogData } from "./LogInterfaces";
 
 export interface InternshipData {
   id: string;

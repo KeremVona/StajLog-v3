@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import internshipService from "./internsipService";
-import {
-  type InternshipData,
-  type MakeInternshipDTO,
-  type UpdateInternshipDTO,
-} from "../../b/b3";
+import type {
+  InternshipData,
+  MakeInternshipDTO,
+  UpdateInternshipDTO,
+} from "../../interfaces/InternshipInterfaces";
 
 export interface InternshipState {
   internships: InternshipData[];

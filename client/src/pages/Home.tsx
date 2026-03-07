@@ -1,19 +1,13 @@
-import { Link } from "react-router";
-import WelcomeCard from "../components/home-dashboard/WelcomeCard";
 import { useEffect } from "react";
+import { Link } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import WelcomeCard from "../components/home-dashboard/WelcomeCard";
+import Navbar from "../components/ui/Navbar";
+import Sidebar from "../components/ui/Sidebar";
 import {
   getAllInternships,
   reset,
 } from "../features/internship/internshipSlice";
-import Navbar from "../components/ui/Navbar";
-import Sidebar from "../components/ui/Sidebar";
-
-interface MenuItem {
-  title: string;
-  icon: string;
-  path: string;
-}
 
 interface StatCardProps {
   title: string;
@@ -26,18 +20,6 @@ interface StatCardProps {
 }
 
 const Home = () => {
-  const topNavItems: MenuItem[] = [
-    { title: "Home", icon: "dashboard", path: "/" },
-    { title: "Add Internship", icon: "tune", path: "/menu-1" },
-    { title: "Another menu item", icon: "file_copy", path: "/menu-2" },
-  ];
-
-  const settingsItems: MenuItem[] = [
-    { title: "Profile", icon: "face", path: "/profile" },
-    { title: "Settings", icon: "settings", path: "/settings" },
-    { title: "Log out", icon: "power_settings_new", path: "/logout" },
-  ];
-
   const dispatch = useAppDispatch();
 
   const { internships, isLoading, isError, isSuccess, message } =
@@ -63,7 +45,7 @@ const Home = () => {
       <Navbar />
 
       <div className="flex flex-row pt-24 px-10 pb-4">
-        <Sidebar topNavItems={topNavItems} settingsItems={settingsItems} />
+        <Sidebar />
 
         <main className="w-10/12">
           <div className="flex flex-row gap-4">

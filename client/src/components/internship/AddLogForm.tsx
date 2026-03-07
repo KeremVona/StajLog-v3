@@ -1,27 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { makeLog, reset } from "../../features/log/logSlice";
+import type { AddLogFormProps } from "../../interfaces/LogInterfaces";
 
-export interface LogData {
-  id: string;
-  dayNumber: number;
-  date: Date | string;
-  originalContent: string;
-  internshipId: string;
-  finalContent?: string;
-  isAiImproved?: boolean;
-}
 // TODO:
 // Add "use today's date"
-
-// We omit 'id' and 'finalContent' for the making form,
-// as those are typically handled by the backend or AI service.
-type NewLogData = Omit<LogData, "id" | "finalContent">;
-
-interface AddLogFormProps {
-  internshipId: string;
-  isSubmitting?: boolean;
-}
 
 export default function AddLogForm({
   internshipId,
@@ -62,7 +45,6 @@ export default function AddLogForm({
       }),
     );
 
-    // Optional: Reset form after submit
     setDayNumber("");
     setDate("");
     setOriginalContent("");

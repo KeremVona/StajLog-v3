@@ -1,5 +1,5 @@
 import API from "../../api/api";
-import type { LogData } from "../../b/b2";
+import type { LogData } from "../../interfaces/LogInterfaces";
 
 const getAllLogs = async (): Promise<LogData[]> => {
   const response = await API.get("/log/");

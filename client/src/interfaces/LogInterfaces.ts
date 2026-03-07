@@ -9,6 +9,11 @@ export interface LogData {
   isAiImproved?: boolean;
 }
 
+export interface AddLogFormProps {
+  internshipId: string;
+  isSubmitting?: boolean;
+}
+
 export interface LogParams {
   id?: string;
 }

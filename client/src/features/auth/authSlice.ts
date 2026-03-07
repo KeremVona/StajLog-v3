@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
 import type {
-  AuthResponse,
-  LoginPayload,
-  RegisterPayload,
   User,
-} from "../../b/b1";
+  AuthResponse,
+  RegisterPayload,
+  LoginPayload,
+} from "../../interfaces/AuthInterfaces";
 
 const userPreParsed = localStorage.getItem("token");
 const user = userPreParsed ? JSON.parse(userPreParsed) : null;

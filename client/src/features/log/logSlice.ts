@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import logService from "./logService";
-import type { LogData } from "../../b/b2";
+import type { LogData } from "../../interfaces/LogInterfaces";
 
 export interface LogState {
   logs: LogData[];

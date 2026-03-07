@@ -3,7 +3,7 @@ import type {
   InternshipData,
   MakeInternshipDTO,
   UpdateInternshipDTO,
-} from "../../b/b3";
+} from "../../interfaces/InternshipInterfaces";
 
 const getAllInternships = async (): Promise<InternshipData[]> => {
   const response = await API.get("/internship/");

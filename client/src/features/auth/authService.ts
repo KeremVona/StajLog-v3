@@ -1,5 +1,9 @@
 import API from "../../api/api";
-import type { AuthResponse, LoginPayload, RegisterPayload } from "../../b/b1";
+import type {
+  RegisterPayload,
+  AuthResponse,
+  LoginPayload,
+} from "../../interfaces/AuthInterfaces";
 
 const register = async (userData: RegisterPayload): Promise<AuthResponse> => {
   const response = await API.post("/auth/register", userData);

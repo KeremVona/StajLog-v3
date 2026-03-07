@@ -6,12 +6,18 @@ interface MenuItem {
   path: string;
 }
 
-interface SidebarProps {
-  topNavItems: MenuItem[];
-  settingsItems: MenuItem[];
-}
+const Sidebar = () => {
+  const topNavItems: MenuItem[] = [
+    { title: "Home", icon: "dashboard", path: "/" },
+    { title: "Add Internship", icon: "tune", path: "/menu-1" },
+    { title: "Another menu item", icon: "file_copy", path: "/menu-2" },
+  ];
 
-const Sidebar = ({ topNavItems, settingsItems }: SidebarProps) => {
+  const settingsItems: MenuItem[] = [
+    { title: "Profile", icon: "face", path: "/profile" },
+    { title: "Settings", icon: "settings", path: "/settings" },
+    { title: "Log out", icon: "power_settings_new", path: "/logout" },
+  ];
   return (
     <aside className="w-2/12 mr-6">
       <MenuSection items={topNavItems} />

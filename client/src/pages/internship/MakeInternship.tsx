@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   makeInternship,
   reset,
 } from "../../features/internship/internshipSlice";
-import { useNavigate } from "react-router";
-
-export interface MakeInternshipDTO {
-  title: string;
-  companyName: string;
-  startDate: Date | string;
-  endDate?: Date | string | null;
-  templateId?: string | null;
-}
+import type { MakeInternshipDTO } from "../../interfaces/InternshipInterfaces";
 
 export default function AddInternship() {
   const [formData, setFormData] = useState<MakeInternshipDTO>({
