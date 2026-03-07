@@ -20,13 +20,11 @@ type NewLogData = Omit<LogData, "id" | "finalContent">;
 
 interface AddLogFormProps {
   internshipId: string;
-  onSubmit: (data: NewLogData) => void;
   isSubmitting?: boolean;
 }
 
 export default function AddLogForm({
   internshipId,
-  onSubmit,
   isSubmitting = false,
 }: AddLogFormProps) {
   const [dayNumber, setDayNumber] = useState<number | "">("");
@@ -53,17 +51,10 @@ export default function AddLogForm({
     // Basic validation
     if (!dayNumber || !date || !originalContent.trim()) return;
 
-    onSubmit({
-      dayNumber: Number(dayNumber),
-      date,
-      originalContent,
-      internshipId,
-      isAiImproved,
-    });
-
+    console.log("Sending to backend");
     dispatch(
       makeLog({
-        id: "",
+        id: internshipId,
         dayNumber: dayNumber,
         date: date,
         originalContent: originalContent,
@@ -72,10 +63,10 @@ export default function AddLogForm({
     );
 
     // Optional: Reset form after submit
-    // setDayNumber('');
-    // setDate('');
-    // setOriginalContent('');
-    // setIsAiImproved(false);
+    setDayNumber("");
+    setDate("");
+    setOriginalContent("");
+    setIsAiImproved(false);
   };
 
   if (isLoading) {
@@ -84,7 +75,10 @@ export default function AddLogForm({
 
   return (
     <div className="p-8 bg-rose-50 font-sans text-gray-700">
-      <form className="flex flex-col gap-4 bg-white p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(255,192,203,0.4)] border-2 border-pink-100 w-200 max-w-8xl">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 bg-white p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(255,192,203,0.4)] border-2 border-pink-100 w-200 max-w-8xl"
+      >
         <div className="flex flex-col flex-1 w-full">
           <label
             htmlFor="originalContent"
@@ -95,6 +89,8 @@ export default function AddLogForm({
           <textarea
             id="originalContent"
             placeholder="What did you build today?"
+            value={originalContent}
+            onChange={(e) => setOriginalContent(e.target.value)}
             className="w-full h-50 px-5 py-3 bg-rose-50 border-2 border-pink-200 rounded-2xl focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all text-gray-700 placeholder-pink-300 font-medium"
           />
         </div>
@@ -110,6 +106,10 @@ export default function AddLogForm({
               type="number"
               id="dayNumber"
               placeholder="1"
+              value={dayNumber}
+              onChange={(e) =>
+                setDayNumber(e.target.value ? Number(e.target.value) : "")
+              }
               className="w-full px-4 py-3 bg-orange-50 border-2 border-orange-200 rounded-2xl focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all text-gray-700 placeholder-orange-300 font-medium"
             />
           </div>
@@ -123,6 +123,8 @@ export default function AddLogForm({
             <input
               type="date"
               id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               className="w-full px-4 py-3 bg-orange-50 border-2 border-orange-200 rounded-2xl focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all text-orange-500 font-medium"
             />
           </div>
@@ -132,6 +134,8 @@ export default function AddLogForm({
                 <input
                   type="checkbox"
                   id="isAiImproved"
+                  checked={isAiImproved}
+                  onChange={(e) => setIsAiImproved(e.target.checked)}
                   className="peer sr-only"
                 />
                 <div className="w-7 h-7 bg-white border-2 border-pink-300 rounded-xl peer-checked:bg-pink-400 peer-checked:border-pink-400 transition-all flex items-center justify-center group-hover:shadow-md">
@@ -158,7 +162,7 @@ export default function AddLogForm({
           </div>
           <div className="shrink-0 ml-2">
             <button
-              type="button"
+              type="submit"
               className="px-8 py-3 bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 hover:shadow-xl hover:shadow-pink-300 hover:from-orange-500 hover:to-pink-500 transform hover:-translate-y-1 transition-all focus:outline-none focus:ring-4 focus:ring-pink-200"
             >
               Add Log

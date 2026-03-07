@@ -1,5 +1,4 @@
-import { Link, useNavigate } from "react-router";
-import MenuSection from "../components/home-dashboard/MenuSection";
+import { Link } from "react-router";
 import WelcomeCard from "../components/home-dashboard/WelcomeCard";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -38,8 +37,6 @@ const Home = () => {
     { title: "Settings", icon: "settings", path: "/settings" },
     { title: "Log out", icon: "power_settings_new", path: "/logout" },
   ];
-
-  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 

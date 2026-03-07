@@ -22,7 +22,7 @@ function App() {
             element={<ProtectedRoute content={<AddInternship />} />}
           />
           <Route
-            path="/internship/:id"
+            path="/internship/:internshipId"
             element={<ProtectedRoute content={<ViewInternship />} />}
           />
           <Route path="*" element={<Navigate to="/login" replace />} />

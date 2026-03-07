@@ -4,7 +4,9 @@ import Navbar from "../../components/ui/Navbar";
 import Sidebar from "../../components/ui/Sidebar";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getAllLogs, reset } from "../../features/log/logSlice";
+import { getInternshipById } from "../../features/internship/internshipSlice";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 interface MenuItem {
   title: string;
@@ -22,11 +24,7 @@ export interface LogData {
   isAiImproved?: boolean;
 }
 
-interface ViewInternshipProps {
-  internshipId: string;
-}
-
-const ViewInternship = ({ internshipId }: ViewInternshipProps) => {
+const ViewInternship = () => {
   const topNavItems: MenuItem[] = [
     { title: "Home", icon: "dashboard", path: "/" },
     { title: "Add Internship", icon: "tune", path: "/menu-1" },
@@ -38,6 +36,12 @@ const ViewInternship = ({ internshipId }: ViewInternshipProps) => {
     { title: "Settings", icon: "settings", path: "/settings" },
     { title: "Log out", icon: "power_settings_new", path: "/logout" },
   ];
+
+  const { internshipId } = useParams<{ internshipId: string }>();
+
+  if (!internshipId) {
+    return <div>Internship Id not found</div>;
+  }
 
   const dispatch = useAppDispatch();
 
@@ -54,26 +58,8 @@ const ViewInternship = ({ internshipId }: ViewInternshipProps) => {
 
   useEffect(() => {
     dispatch(getAllLogs());
+    dispatch(getInternshipById(internshipId));
   }, []);
-
-  const mockLogs: LogData[] = [
-    {
-      id: "fhiuwegfhewg",
-      dayNumber: 1,
-      date: "Oct 12, 2026",
-      originalContent:
-        "originalContentfehajkeeeee e e e eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      internshipId: "fbjnkdafhkja",
-    },
-    {
-      id: "fhiuwegfhewg",
-      dayNumber: 2,
-      date: "Oct 12, 2026",
-      originalContent:
-        "originalContentfehajkeeeee e e e eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      internshipId: "fbjnkdafhkja",
-    },
-  ];
 
   if (isLoading) {
     return <>Loading...</>;
@@ -83,18 +69,7 @@ const ViewInternship = ({ internshipId }: ViewInternshipProps) => {
       <Navbar />
       <div className="flex flex-row pt-24 px-10 pb-4">
         <Sidebar topNavItems={topNavItems} settingsItems={settingsItems} />
-        <AddLogForm
-          internshipId={""}
-          onSubmit={function (data: {
-            dayNumber: number;
-            date: Date | string;
-            originalContent: string;
-            internshipId: string;
-            isAiImproved?: boolean | undefined;
-          }): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        <AddLogForm internshipId={internshipId} />
         <LogCarousel logs={logs} />
       </div>
     </div>
