@@ -3,17 +3,12 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { makeLog, reset } from "../../features/log/logSlice";
 import type { AddLogFormProps } from "../../interfaces/LogInterfaces";
 
-// TODO:
-// Add "use today's date"
-
-export default function AddLogForm({
-  internshipId,
-  isSubmitting = false,
-}: AddLogFormProps) {
-  const [dayNumber, setDayNumber] = useState<number | "">("");
+export default function AddLogForm({ internshipId, dNumber }: AddLogFormProps) {
+  const [dayNumber, setDayNumber] = useState<number>(0);
   const [date, setDate] = useState<string>("");
   const [originalContent, setOriginalContent] = useState("");
   const [isAiImproved, setIsAiImproved] = useState(false);
+  const defaultDate = new Date().toISOString().slice(0, 10);
 
   const dispatch = useAppDispatch();
 
@@ -32,9 +27,12 @@ export default function AddLogForm({
     e.preventDefault();
 
     // Basic validation
-    if (!dayNumber || !date || !originalContent.trim()) return;
+    if (!date || !originalContent.trim()) return;
 
-    console.log("Sending to backend");
+    if (!dayNumber) {
+      setDayNumber(dNumber);
+    }
+
     dispatch(
       makeLog({
         id: internshipId,
@@ -45,11 +43,16 @@ export default function AddLogForm({
       }),
     );
 
-    setDayNumber("");
+    setDayNumber(0);
     setDate("");
     setOriginalContent("");
     setIsAiImproved(false);
   };
+
+  useEffect(() => {
+    setDayNumber(dNumber);
+    setDate(defaultDate);
+  }, [dNumber]);
 
   if (isLoading) {
     return <>Loading...</>;
@@ -87,10 +90,10 @@ export default function AddLogForm({
             <input
               type="number"
               id="dayNumber"
-              placeholder="1"
+              placeholder={dNumber.toString()}
               value={dayNumber}
               onChange={(e) =>
-                setDayNumber(e.target.value ? Number(e.target.value) : "")
+                setDayNumber(e.target.value ? Number(e.target.value) : 0)
               }
               className="w-full px-4 py-3 bg-orange-50 border-2 border-orange-200 rounded-2xl focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all text-gray-700 placeholder-orange-300 font-medium"
             />

@@ -11,7 +11,7 @@ export interface LogData {
 
 export interface AddLogFormProps {
   internshipId: string;
-  isSubmitting?: boolean;
+  dNumber: number;
 }
 
 export interface LogParams {
