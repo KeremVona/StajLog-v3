@@ -10,6 +10,7 @@ interface LogCarouselProps {
 }
 
 export default function LogCarousel({ logs }: LogCarouselProps) {
+  const sortedLogs = [...logs].sort((a, b) => a.dayNumber - b.dayNumber);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editingLog, setEditingLog] = useState<LogData | null>(null);
 
@@ -49,7 +50,7 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
     }
   }, [isError, isSuccess, message, dispatch]);
 
-  if (!logs || logs.length === 0) {
+  if (!sortedLogs || sortedLogs.length === 0) {
     return (
       <div className="text-center p-8 text-pink-400 font-bold">
         No logs found for this internship yet!
@@ -58,7 +59,9 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
   }
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === logs.length - 1 ? prev : prev + 1));
+    setCurrentIndex((prev) =>
+      prev === sortedLogs.length - 1 ? prev : prev + 1,
+    );
   };
 
   const prevSlide = () => {
@@ -66,7 +69,7 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
   };
 
   const isFirst = currentIndex === 0;
-  const isLast = currentIndex === logs.length - 1;
+  const isLast = currentIndex === sortedLogs.length - 1;
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center relative">
@@ -75,7 +78,7 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {logs.map((log) => (
+          {sortedLogs.map((log) => (
             <div key={log.id} className="w-full shrink-0 px-2">
               <LogCard log={log} onEdit={handleEditClick} />
             </div>
@@ -110,7 +113,7 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
         </button>
 
         <span className="text-sm font-bold text-pink-400 uppercase tracking-wider">
-          {currentIndex + 1} / {logs.length}
+          {currentIndex + 1} / {sortedLogs.length}
         </span>
 
         <button
