@@ -1,20 +1,12 @@
 import { useState } from "react";
-
-export interface LogData {
-  id: string;
-  dayNumber: number;
-  date: Date | string;
-  originalContent: string;
-  internshipId: string;
-  finalContent?: string;
-  isAiImproved?: boolean;
-}
+import type { LogData } from "../../interfaces/LogInterfaces";
 
 interface LogCardProps {
   log: LogData;
+  onEdit: (log: LogData) => void;
 }
 
-export function LogCard({ log }: LogCardProps) {
+export function LogCard({ log, onEdit }: LogCardProps) {
   const [showOriginal, setShowOriginal] = useState(false);
 
   const hasAiContent = log.isAiImproved && log.finalContent;
@@ -38,6 +30,13 @@ export function LogCard({ log }: LogCardProps) {
           <span className="text-sm font-bold text-pink-400 uppercase tracking-wider">
             {formattedDate}
           </span>
+          {/* Add the onClick handler to trigger the edit callback */}
+          <button
+            onClick={() => onEdit(log)}
+            className="px-4 py-1.5 bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold rounded-xl shadow-md shadow-pink-200 text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            Edit log
+          </button>
         </div>
 
         {log.isAiImproved && (
