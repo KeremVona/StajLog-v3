@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { reset, updateLog } from "../../features/log/logSlice";
+import { reset, updateLog, deleteLog } from "../../features/log/logSlice";
 import type { LogData, LogParamsUpdate } from "../../interfaces/LogInterfaces";
 import { EditLogModal } from "./EditLogModal";
 import { LogCard } from "./LogCard";
@@ -13,12 +13,31 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
   const sortedLogs = [...logs].sort((a, b) => a.dayNumber - b.dayNumber);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editingLog, setEditingLog] = useState<LogData | null>(null);
+  const [targetLogId, setTargetLogId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
 
   const { isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.logs,
   );
+
+  // --- EFFECTS FOR JUMPING & DELETING --- //
+
+  useEffect(() => {
+    if (targetLogId) {
+      const newIndex = sortedLogs.findIndex((log) => log.id === targetLogId);
+      if (newIndex !== -1 && newIndex !== currentIndex) {
+        setCurrentIndex(newIndex);
+      }
+      setTargetLogId(null);
+    }
+  }, [sortedLogs, targetLogId, currentIndex]);
+
+  useEffect(() => {
+    if (sortedLogs.length > 0 && currentIndex >= sortedLogs.length) {
+      setCurrentIndex(sortedLogs.length - 1);
+    }
+  }, [sortedLogs.length, currentIndex]);
 
   const handleEditClick = (logToEdit: LogData) => {
     setEditingLog(logToEdit);
@@ -30,12 +49,24 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
       return;
     }
 
+    setTargetLogId(update.id);
+
     dispatch(
       updateLog({
         id: update.id,
         logData: update.data,
       }),
     );
+  };
+
+  const handleDelete = (id: string) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this log? This cannot be undone.",
+      )
+    ) {
+      dispatch(deleteLog(id));
+    }
   };
 
   // Handle Redux side-effects (errors, success messages)
@@ -80,7 +111,11 @@ export default function LogCarousel({ logs }: LogCarouselProps) {
         >
           {sortedLogs.map((log) => (
             <div key={log.id} className="w-full shrink-0 px-2">
-              <LogCard log={log} onEdit={handleEditClick} />
+              <LogCard
+                log={log}
+                onEdit={handleEditClick}
+                onDelete={handleDelete}
+              />
             </div>
           ))}
         </div>
