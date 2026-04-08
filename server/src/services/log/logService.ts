@@ -70,3 +70,21 @@ export const deleteLogService = async (id: string) => {
     );
   }
 };
+
+export const improveLog = async (id: string, content: string) => {
+  try {
+    const improvedLog = await prisma.dailyLog.update({
+      where: { id: id },
+      data: {
+        finalContent: content,
+      },
+    });
+
+    return { succcess: true, data: improvedLog };
+  } catch (error) {
+    handlePrismaError(
+      error,
+      "Failed to improve the daily log. Please try again.",
+    );
+  }
+};
