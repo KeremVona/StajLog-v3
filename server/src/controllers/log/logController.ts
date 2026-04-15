@@ -1,13 +1,14 @@
 import { type Request, type Response } from "express";
 import { type ParamsDictionary } from "express-serve-static-core";
+import { LogData } from "../../b/b1";
 import {
   deleteLogService,
   getAllLogs,
   getLogById,
   makeLogService,
   updateLogService,
+  improveLog,
 } from "../../services/log/logService";
-import { LogData } from "../../b/b1";
 
 interface GetLogRequestParams extends ParamsDictionary {
   id: string;
@@ -119,6 +120,40 @@ export const deleteLog = async (
     return res.status(500).json({
       success: false,
       error: "An error occurred while deleting the log.",
+    });
+  }
+};
+
+export const improveLogHandler = async (
+  req: Request<GetLogRequestParams, string>,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const { content } = req.body;
+
+  try {
+    if (content === undefined) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide log content to improve.",
+      });
+    }
+
+    const improvedLog = await updateLogService(id, req.body);
+
+    return res.status(200).send(improvedLog);
+  } catch (error: any) {
+    if (error.message && error.message.includes("already exists")) {
+      return res.status(409).json({
+        success: false,
+        error: error.message,
+      });
+    }
+
+    console.error("[improveLogHandler Controller Error]:", error);
+    return res.status(500).json({
+      success: false,
+      error: "An error occurred while updating the log.",
     });
   }
 };
